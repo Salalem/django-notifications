@@ -1,0 +1,11 @@
+stages:
+- name: Build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: salalemdockerhub/django-notifications-api:latest
+      pushRemote: true
+      registry: index.docker.io
+timeout: 60
+notification: {}

@@ -18,29 +18,15 @@ from salalem_notifications.signals import notify
 from salalem_notifications.utils import id2slug
 
 
-class NotificationData(object):
-    to = None
-    cc = []
-
-    def __init__(self, to=None, cc=None):
-        self.to = to
-
-    @classmethod
-    def from_json(cls, json_str):
-        json_dict = json.loads(json_str)
-        return cls(**json_dict)
-
-    def to_json(self):
-        return json.dumps(self.__dict__)
-
-
-class EmailNotificationData(NotificationData):
-    def __init__(self, subject=None, header=None,
+class EmailNotificationData(object):
+    def __init__(self, to=None, cc=None,
+                 subject=None, header=None,
                  text=None, secondary_text=None,
                  signature=None, c2a_link=None,
                  c2a_button=None, footer_text=None,
                  extra_data=None):
-
+        self.to = to
+        self.cc = cc
         self.subject = subject
         self.header = header
         self.text = text
@@ -50,6 +36,14 @@ class EmailNotificationData(NotificationData):
         self.c2a_button = c2a_button
         self.footer_text = footer_text
         self.extra_data = extra_data
+
+    @classmethod
+    def from_json(cls, json_str):
+        json_dict = json.loads(json_str)
+        return cls(**json_dict)
+
+    def to_json(self):
+        return json.dumps(self.__dict__)
 
 
 EXTRA_DATA = True

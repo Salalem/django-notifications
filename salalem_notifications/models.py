@@ -29,6 +29,7 @@ class EmailNotificationData(object):
     c2a_link = None
     c2a_button = None
     footer_text = None
+    extra_data = {}
 
 
 EXTRA_DATA = settings.DJANGO_NOTIFICATIONS_CONFIG["USE_JSONFIELD"]

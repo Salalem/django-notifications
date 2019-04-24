@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-lines
+import json
 
 from django.conf import settings
 from django.contrib.auth.models import Group
@@ -18,21 +19,26 @@ from salalem_notifications.utils import id2slug
 
 
 class NotificationData(object):
-    pass
+    @classmethod
+    def from_json(cls, json_str):
+        json_dict = json.loads(json_str)
+        return cls(**json_dict)
 
 
-class EmailNotificationData(object):
-    subject = None
-    header = None
-    text = None
-    signature = None
-    c2a_link = None
-    c2a_button = None
-    footer_text = None
-    extra_data = {}
+class EmailNotificationData(NotificationData):
+    def __init__(self, subject, header, text, secondary_text, signature, c2a_link, c2a_button, footer_text, extra_data):
+        self.subject = subject
+        self.header = header
+        self.text = text
+        self.secondary_text = secondary_text
+        self.signature = signature
+        self.c2a_link = c2a_link
+        self.c2a_button = c2a_button
+        self.footer_text = footer_text
+        self.extra_data = extra_data
 
 
-EXTRA_DATA = settings.DJANGO_NOTIFICATIONS_CONFIG["USE_JSONFIELD"]
+EXTRA_DATA = True
 
 
 def is_soft_delete():

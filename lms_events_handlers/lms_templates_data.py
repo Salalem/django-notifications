@@ -16,16 +16,16 @@ def _get_base_data():
     }
 
 
-def get_new_enrollment_data(course_display_name, enrollment_link, signature="", footer_text=""):
+def get_new_enrollment_data(notification_data):
     full_data = {}
     full_data.update(_get_base_data())
     full_data.update({
-                    "subject": "New Course Enrollment",
-                    "header": "New Enrollment in " + course_display_name,
-                    "text": "You have been enrolled in: " + course_display_name + ", you can go directly to the studying material by clicking the link below",
-                    "signature": signature,
-                    "c2a_link": enrollment_link,
-                    "c2a_button": "Go to course",
-                    "footer_text": footer_text
+                    "subject": notification_data.subject,
+                    "header": notification_data.header.format(notification_data.extra_data["course_display_name"]),
+                    "text": notification_data.text.format("منصة تمكين eNable", notification_data.extra_data["course_display_name"], notification_data.extra_data["deadline"]),
+                    "signature": notification_data.signature,
+                    "c2a_link": notification_data.c2a_link,
+                    "c2a_button": notification_data.c2a_button,
+                    "footer_text": notification_data.footer_text
                 })
     return full_data

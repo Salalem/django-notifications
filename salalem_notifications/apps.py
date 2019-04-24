@@ -11,6 +11,8 @@ class Config(AppConfig):
     def ready(self):
         super(Config, self).ready()
         import salalem_notifications.signals
+        import lms_events_handlers.handlers
+
         salalem_notifications.notify = salalem_notifications.signals.notify
 
         template_data = get_new_enrollment_data(course_display_name="Anti-Money Laundry",

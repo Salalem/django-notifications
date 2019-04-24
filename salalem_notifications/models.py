@@ -27,8 +27,14 @@ class NotificationData(object):
     def to_json(self):
         return json.dumps(self.__dict__)
 
+
 class EmailNotificationData(NotificationData):
-    def __init__(self, subject, header, text, secondary_text, signature, c2a_link, c2a_button, footer_text, extra_data):
+    def __init__(self, subject=None, header=None,
+                 text=None, secondary_text=None,
+                 signature=None, c2a_link=None,
+                 c2a_button=None, footer_text=None,
+                 extra_data=None):
+
         self.subject = subject
         self.header = header
         self.text = text

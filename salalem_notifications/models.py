@@ -215,7 +215,7 @@ class Notification(models.Model):
 
     class Meta:
         ordering = ("-timestamp",)
-        app_label = "notifications"
+        app_label = "salalem_notifications"
 
     def __unicode__(self):
         ctx = {

@@ -24,7 +24,7 @@ def get_new_enrollment_data(notification_data):
         "header": notification_data.header.format(notification_data.extra_data["course_display_name"]),
         "text": notification_data.text.format(notification_data.extra_data["platform_name"],
                                               notification_data.extra_data["course_display_name"]),
-        "secondary_text": notification_data.text.format(notification_data.extra_data["deadline"]),
+        "secondary_text": notification_data.secondary_text.format(notification_data.extra_data["deadline"]),
 
         "signature": notification_data.signature,
         "c2a_link": notification_data.c2a_link,

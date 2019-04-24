@@ -14,10 +14,8 @@ def log_mq_exception(exception):
 
 def on_new_enrollment_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    print("notification_data ---------->")
-
     template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=["firas@salalem.com"],
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
                template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[

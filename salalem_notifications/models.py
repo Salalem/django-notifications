@@ -19,6 +19,9 @@ from salalem_notifications.utils import id2slug
 
 
 class NotificationData(object):
+    to = None
+    cc = []
+
     @classmethod
     def from_json(cls, json_str):
         json_dict = json.loads(json_str)

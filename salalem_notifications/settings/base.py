@@ -134,6 +134,6 @@ PROPAGANDA_BROKER_URL = (
 
 # Email settings
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = os.environ.get("QUEUE_PROTOCOL", "API_KEY")
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "API_KEY")
 
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False

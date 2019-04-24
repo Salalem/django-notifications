@@ -35,3 +35,4 @@ def on_new_enrollment_handler(body, message):
 
 propaganda.subscribe("lms.enrollment.#")\
     .on('lms.enrollment.new', on_new_enrollment_handler, on_exception=log_mq_exception)
+

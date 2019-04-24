@@ -16,6 +16,21 @@ from model_utils import Choices
 from salalem_notifications.signals import notify
 from salalem_notifications.utils import id2slug
 
+
+class NotificationData(object):
+    pass
+
+
+class EmailNotificationData(object):
+    subject = None
+    header = None
+    text = None
+    signature = None
+    c2a_link = None
+    c2a_button = None
+    footer_text = None
+
+
 EXTRA_DATA = settings.DJANGO_NOTIFICATIONS_CONFIG["USE_JSONFIELD"]
 
 
@@ -204,7 +219,7 @@ class Notification(models.Model):
 
     public = models.BooleanField(default=True, db_index=True)
     deleted = models.BooleanField(default=False, db_index=True)
-    emailed = models.BooleanField(default=False, db_index=True)
+    sent_email = models.BooleanField(default=False, db_index=True)
     sent_sms = models.BooleanField(default=False, db_index=True)
     sent_to_browser = models.BooleanField(default=False, db_index=True)
     sent_to_android = models.BooleanField(default=False, db_index=True)

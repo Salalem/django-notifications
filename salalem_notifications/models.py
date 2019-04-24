@@ -22,6 +22,9 @@ class NotificationData(object):
     to = None
     cc = []
 
+    def __init__(self, to=None, cc=None):
+        self.to = to
+
     @classmethod
     def from_json(cls, json_str):
         json_dict = json.loads(json_str)

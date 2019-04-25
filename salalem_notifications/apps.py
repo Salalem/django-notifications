@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import sys
 
 from django.apps import AppConfig
@@ -9,8 +10,8 @@ class Config(AppConfig):
 
     def ready(self):
         super(Config, self).ready()
-        if 'runserver' not in sys.argv:
-            return True
+        if os.environ.get("BUILD_PROFILE", "") != "development":
+            import lms_events_handlers.handlers
 
         import salalem_notifications.signals
 

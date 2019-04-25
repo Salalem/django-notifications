@@ -25,6 +25,40 @@ def on_new_enrollment_handler(body, message):
                ])
 
 
+def on_enrollment_valid_until_extended_handler(body, message):
+    notification_data = EmailNotificationData.from_json(body['enrollment'])
+    template_data = get_new_enrollment_data(notification_data)
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
+               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_data=template_data,
+               categories=[
+                   "lms",
+                   "enrollment",
+                   "valid_until"
+                   "extended"
+               ])
+
+
+def on_enrollment_allowed_attempts_changed_handler(body, message):
+    print("-------")
+    notification_data = EmailNotificationData.from_json(body['enrollment'])
+    template_data = get_new_enrollment_data(notification_data)
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
+               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_data=template_data,
+               categories=[
+                   "lms",
+                   "enrollment",
+                   "valid_until"
+                   "extended"
+               ])
+
+
+logger.error('Subscribing now')
+print("--------")
+
 propaganda.subscribe("lms.enrollment.#")\
-    .on('lms.enrollment.new', on_new_enrollment_handler, on_exception=log_mq_exception)
+    .on('lms.enrollment.new', on_new_enrollment_handler, on_exception=log_mq_exception)\
+    .on('lms.enrollment.updated.valid_until.extended', on_enrollment_valid_until_extended_handler, on_exception=log_mq_exception)\
+    .on('lms.enrollment.updated.allowed_attempts.changed', on_enrollment_allowed_attempts_changed_handler, on_exception=log_mq_exception)
 

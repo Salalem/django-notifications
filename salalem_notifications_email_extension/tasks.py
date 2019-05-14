@@ -5,9 +5,9 @@ class AvailableEmailServiceProviders:
     sendgrid = "sendgrid"
 
 
-def send_email(provider, from_email="Salalem <no-reply@salalem.com>",
+def send_email(provider, from_email="Salalem <training@salalem.com>",
                to_emails=None,
-               reply_to_email_header="no-reply@salalem.com", **kwargs):
+               reply_to_email_header="training@salalem.com", **kwargs):
 
     if to_emails is None:
         to_emails = []

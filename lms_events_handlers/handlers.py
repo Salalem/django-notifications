@@ -1,6 +1,7 @@
 from django_microservice_propaganda.propaganda import Propaganda, logger
 
-from lms_events_handlers.lms_templates_data import get_new_enrollment_data, NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID
+from lms_events_handlers.lms_templates_data import get_new_enrollment_data, NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID, \
+    get_new_certificate_data
 from salalem_notifications.models import EmailNotificationData
 from salalem_notifications_email_extension.tasks import AvailableEmailServiceProviders, send_email
 
@@ -85,23 +86,22 @@ def on_enrollment_updated_status_resubmit_handler(body, message):
 
 
 def on_certificate_ready_handler(body, message):
+    print(body)
     notification_data = EmailNotificationData.from_json(body['certificate'])
-    template_data = get_new_enrollment_data(notification_data)
+    template_data = get_new_certificate_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
                template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
-                   "enrollment",
-                   "graded",
-                   "status",
-                   "updated",
-                   "failed"
+                   "certificate",
+                   "issue",
                ])
 
 
 logger.error('Subscribing now')
-print("--------")
+
+logger.error('Subscribing to lms.enrollment.#')
 
 propaganda.subscribe("lms.enrollment.#") \
     .on('lms.enrollment.new', on_new_enrollment_handler, on_exception=log_mq_exception) \
@@ -112,6 +112,10 @@ propaganda.subscribe("lms.enrollment.#") \
     .on('lms.enrollment.updated.status.failed', on_enrollment_updated_status_failed_handler,
         on_exception=log_mq_exception) \
     .on('lms.enrollment.updated.status.resubmit', on_enrollment_updated_status_resubmit_handler,
-        on_exception=log_mq_exception) \
-    .on('lms.enrollment.certificate.status.ready', on_certificate_ready_handler,
+        on_exception=log_mq_exception)
+
+logger.error('Subscribing to lms.certificate.#')
+
+propaganda.subscribe("lms.certificate.#") \
+    .on('lms.certificate.status.ready', on_certificate_ready_handler,
         on_exception=log_mq_exception)

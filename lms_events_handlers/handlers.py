@@ -99,6 +99,23 @@ def on_certificate_ready_handler(body, message):
                ])
 
 
+def on_enrollment_dealine_approaching_handler(body, message):
+    notification_data = EmailNotificationData.from_json(body['enrollment'])
+    print(body)
+    template_data = get_new_enrollment_data(notification_data)
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
+               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_data=template_data,
+               categories=[
+                   "lms",
+                   "enrollment",
+                   "graded",
+                   "status",
+                   "updated",
+                   "failed"
+               ])
+
+
 logger.error('Subscribing now')
 
 logger.error('Subscribing to lms.enrollment.#')
@@ -112,6 +129,8 @@ propaganda.subscribe("lms.enrollment.#") \
     .on('lms.enrollment.updated.status.failed', on_enrollment_updated_status_failed_handler,
         on_exception=log_mq_exception) \
     .on('lms.enrollment.updated.status.resubmit', on_enrollment_updated_status_resubmit_handler,
+        on_exception=log_mq_exception) \
+    .on('lms.enrollment.deadline.approaching', on_enrollment_dealine_approaching_handler,
         on_exception=log_mq_exception)
 
 logger.error('Subscribing to lms.certificate.#')

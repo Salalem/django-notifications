@@ -28,6 +28,7 @@ def on_new_enrollment_handler(body, message):
 
 
 def on_enrollment_valid_until_extended_handler(body, message):
+    print(body)
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],

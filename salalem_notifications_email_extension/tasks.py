@@ -7,7 +7,9 @@ class AvailableEmailServiceProviders:
 
 def send_email(provider, from_email="Salalem <training@salalem.com>",
                to_emails=None,
-               reply_to_email_header="training@salalem.com", **kwargs):
+               reply_to_email_header="training@salalem.com",
+               attachment=None,
+               **kwargs):
 
     if to_emails is None:
         to_emails = []
@@ -23,7 +25,7 @@ def send_email(provider, from_email="Salalem <training@salalem.com>",
     mail = EmailMessage(
         from_email=from_email,
         to=to_emails,
-        headers={"Reply-To": reply_to_email_header}
+        headers={"Reply-To": reply_to_email_header},
     )
 
     if provider == AvailableEmailServiceProviders.sendgrid:
@@ -47,6 +49,10 @@ def send_email(provider, from_email="Salalem <training@salalem.com>",
     #     mail.attachments = [
     #         ('somefilename.pdf', file.read(), 'application/pdf')
     #     ]
+
+    if attachment:
+        mail.attach('Enrollments Report.xlsx', attachment,
+                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     # Add categories
     mail.send(fail_silently=False)

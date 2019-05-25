@@ -1,7 +1,9 @@
+from io import BytesIO
+
 from django_microservice_propaganda.propaganda import Propaganda, logger
 
 from lms_events_handlers.lms_templates_data import get_new_enrollment_data, NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID, \
-    get_new_certificate_data
+    get_new_certificate_data, ATTACHMENT_EMAIL_SENDGRID_TEMPLATE_ID, get_new_enrollment_reporting_attachment_data
 from salalem_notifications.models import EmailNotificationData
 from salalem_notifications_email_extension.tasks import AvailableEmailServiceProviders, send_email
 
@@ -101,7 +103,6 @@ def on_certificate_ready_handler(body, message):
 
 def on_enrollment_dealine_approaching_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    print(body)
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
                template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
@@ -109,11 +110,25 @@ def on_enrollment_dealine_approaching_handler(body, message):
                categories=[
                    "lms",
                    "enrollment",
-                   "graded",
-                   "status",
-                   "updated",
-                   "failed"
+                   "deadline",
+                   "approaching",
+                   "user"
                ])
+
+
+def on_enrollment_reporting_new_xls(body, message):
+    notification_data = EmailNotificationData.from_json(body['report'])
+    template_data = get_new_enrollment_reporting_attachment_data(notification_data)
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
+               template_id=ATTACHMENT_EMAIL_SENDGRID_TEMPLATE_ID,
+               template_data=template_data,
+               categories=[
+                   "lms",
+                   "enrollment_reporting",
+                   "xls",
+                   "new"
+               ],
+               attachment=bytes.fromhex(notification_data.extra_data['xls_data']))
 
 
 logger.error('Subscribing now')
@@ -138,3 +153,7 @@ logger.error('Subscribing to lms.certificate.#')
 propaganda.subscribe("lms.certificate.#") \
     .on('lms.certificate.status.ready', on_certificate_ready_handler,
         on_exception=log_mq_exception)
+
+logger.error('Subscribing to lms.enrollment_reporting.#')
+propaganda.subscribe("lms.enrollment_reporting.#") \
+    .on('lms.enrollment_reporting.new.xls', on_enrollment_reporting_new_xls, on_exception=log_mq_exception)

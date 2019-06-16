@@ -5,7 +5,7 @@ class AvailableEmailServiceProviders:
     sendgrid = "sendgrid"
 
 
-def send_email(provider, from_email="Salalem <training@salalem.com>",
+def send_email(provider, from_email="Salalem <training-center@salalem.com>",
                to_emails=None,
                reply_to_email_header="training@salalem.com",
                attachment=None,

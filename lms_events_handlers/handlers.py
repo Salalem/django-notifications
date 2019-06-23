@@ -2,8 +2,9 @@ from io import BytesIO
 
 from django_microservice_propaganda.propaganda import Propaganda, logger
 
-from lms_events_handlers.lms_templates_data import get_new_enrollment_data, NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID, \
-    get_new_certificate_data, ATTACHMENT_EMAIL_SENDGRID_TEMPLATE_ID, get_new_enrollment_reporting_attachment_data
+from lms_events_handlers.lms_templates_data import get_new_enrollment_data, CALL_TO_ACTION_SENDGRID_TEMPLATE_ID, \
+    get_new_certificate_data, ATTACHMENT_EMAIL_SENDGRID_TEMPLATE_ID, get_new_enrollment_reporting_attachment_data, \
+    get_account_activation_data
 from salalem_notifications.models import EmailNotificationData
 from salalem_notifications_email_extension.tasks import AvailableEmailServiceProviders, send_email
 
@@ -18,7 +19,7 @@ def on_new_enrollment_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -32,7 +33,7 @@ def on_enrollment_valid_until_extended_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -46,7 +47,7 @@ def on_enrollment_allowed_attempts_changed_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -60,7 +61,7 @@ def on_enrollment_updated_status_failed_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -76,7 +77,7 @@ def on_enrollment_updated_status_resubmit_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -93,7 +94,7 @@ def on_certificate_ready_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['certificate'])
     template_data = get_new_certificate_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -106,7 +107,7 @@ def on_enrollment_dealine_approaching_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -136,7 +137,7 @@ def on_enrollment_updated_status_overdue_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
     template_data = get_new_enrollment_data(notification_data)
     send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=NEW_ENROLLMENT_SENDGRID_TEMPLATE_ID,
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
                template_data=template_data,
                categories=[
                    "lms",
@@ -147,8 +148,21 @@ def on_enrollment_updated_status_overdue_handler(body, message):
                    "overdue"
                ])
 
-logger.error('Subscribing now')
 
+def on_account_activation_email(body, message):
+    notification_data = EmailNotificationData.from_json(body['data'])
+    template_data = get_account_activation_data(notification_data)
+    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
+               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+               template_data=template_data,
+               categories=[
+                   "lms",
+                   "account",
+                   "activation",
+               ])
+
+
+logger.error('Subscribing now')
 logger.error('Subscribing to lms.enrollment.#')
 
 propaganda.subscribe("lms.enrollment.#") \
@@ -176,3 +190,9 @@ propaganda.subscribe("lms.certificate.#") \
 logger.error('Subscribing to lms.enrollment_reporting.#')
 propaganda.subscribe("lms.enrollment_reporting.#") \
     .on('lms.enrollment_reporting.new.xls', on_enrollment_reporting_new_xls, on_exception=log_mq_exception)
+
+logger.error('Subscribing to lms.account.#')
+propaganda.subscribe("lms.account.#") \
+    .on('lms.account.activation', on_account_activation_email,
+        on_exception=log_mq_exception)
+

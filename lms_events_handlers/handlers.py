@@ -1,3 +1,4 @@
+import json
 from io import BytesIO
 
 from django_microservice_propaganda.propaganda import Propaganda, logger
@@ -5,7 +6,7 @@ from django_microservice_propaganda.propaganda import Propaganda, logger
 from lms_events_handlers.lms_templates_data import get_new_enrollment_data, CALL_TO_ACTION_SENDGRID_TEMPLATE_ID, \
     get_new_certificate_data, ATTACHMENT_EMAIL_SENDGRID_TEMPLATE_ID, get_new_enrollment_reporting_attachment_data, \
     get_account_activation_data
-from salalem_notifications.models import EmailNotificationData
+from salalem_notifications.models import EmailNotificationData, Notification
 from salalem_notifications_email_extension.tasks import AvailableEmailServiceProviders, send_email
 
 propaganda = Propaganda("events")
@@ -17,105 +18,113 @@ def log_mq_exception(exception):
 
 def on_new_enrollment_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "new"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "new"
+                     ]))
 
 
 def on_enrollment_valid_until_extended_handler(body, message):
     print(body)
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "valid_until"
-                   "extended"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "valid_until"
+                         "extended"
+                     ]))
 
 
 def on_enrollment_allowed_attempts_changed_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "valid_until"
-                   "extended"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "valid_until"
+                         "extended"
+                     ]))
 
 
 def on_enrollment_updated_status_failed_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "graded",
-                   "status",
-                   "updated",
-                   "failed"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "graded",
+                         "status",
+                         "updated",
+                         "failed"
+                     ]))
 
 
 def on_enrollment_updated_status_resubmit_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "graded",
-                   "status",
-                   "updated",
-                   "failed"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "graded",
+                         "status",
+                         "updated",
+                         "failed"
+                     ]))
 
 
 def on_certificate_ready_handler(body, message):
     print(body)
     notification_data = EmailNotificationData.from_json(body['certificate'])
-    template_data = get_new_certificate_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "certificate",
-                   "issue",
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="certificate",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "certificate",
+                         "issue",
+                     ]
+                     ))
 
 
 def on_enrollment_dealine_approaching_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "deadline",
-                   "approaching",
-                   "user"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "deadline",
+                         "approaching",
+                         "user"
+                     ]))
 
 
 def on_enrollment_reporting_new_xls(body, message):
@@ -135,31 +144,33 @@ def on_enrollment_reporting_new_xls(body, message):
 
 def on_enrollment_updated_status_overdue_handler(body, message):
     notification_data = EmailNotificationData.from_json(body['enrollment'])
-    template_data = get_new_enrollment_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "enrollment",
-                   "graded",
-                   "status",
-                   "updated",
-                   "overdue"
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="enrollment",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "enrollment",
+                         "graded",
+                         "status",
+                         "updated",
+                         "overdue"
+                     ]))
 
 
 def on_account_activation_email(body, message):
     notification_data = EmailNotificationData.from_json(body['data'])
-    template_data = get_account_activation_data(notification_data)
-    send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[notification_data.to],
-               template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
-               template_data=template_data,
-               categories=[
-                   "lms",
-                   "account",
-                   "activation",
-               ])
+    Notification.new(recipient_email=notification_data.to, subject=notification_data.subject,
+                     content=notification_data.text, template_type="account",
+                     extra_data=notification_data.extra_data,
+                     full_data=str(notification_data.to_json()),
+                     template_id=CALL_TO_ACTION_SENDGRID_TEMPLATE_ID,
+                     categories=json.dumps([
+                         "lms",
+                         "account",
+                         "activation",
+                     ]))
 
 
 logger.error('Subscribing now')
@@ -180,7 +191,6 @@ propaganda.subscribe("lms.enrollment.#") \
     .on('lms.enrollment.updated.status.overdue', on_enrollment_updated_status_overdue_handler,
         on_exception=log_mq_exception)
 
-
 logger.error('Subscribing to lms.certificate.#')
 
 propaganda.subscribe("lms.certificate.#") \
@@ -195,4 +205,3 @@ logger.error('Subscribing to lms.account.#')
 propaganda.subscribe("lms.account.#") \
     .on('lms.account.activation', on_account_activation_email,
         on_exception=log_mq_exception)
-

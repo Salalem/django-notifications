@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import ugettext_noop
 from model_utils.models import TimeStampedModel
-from salalem_notifications_email_extension.tasks import send_email, AvailableEmailServiceProviders
 
 
 class EmailNotificationData(object):
@@ -68,6 +67,7 @@ class Notification(TimeStampedModel):
     )
 
     def send(self):
+        from salalem_notifications_email_extension.tasks import send_email, AvailableEmailServiceProviders
         from lms_events_handlers.lms_templates_data import get_new_enrollment_data, get_new_certificate_data, \
             get_account_activation_data, get_new_enrollment_reporting_attachment_data
         if self.status == "approved" or self.status == "error":

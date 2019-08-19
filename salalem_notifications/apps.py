@@ -10,13 +10,13 @@ class Config(AppConfig):
     name = "salalem_notifications"
 
     def ready(self):
-        super(Config, self).ready()
         IS_NOTIFICATION_SERVICE = None
         try:
             IS_NOTIFICATION_SERVICE = settings.IS_NOTIFICATION_SERVICE
         except:
-            pass
+            return
 
+        super(Config, self).ready()
         if IS_NOTIFICATION_SERVICE:
             if os.environ.get("BUILD_PROFILE", "") != "development":
                 import lms_events_handlers.handlers

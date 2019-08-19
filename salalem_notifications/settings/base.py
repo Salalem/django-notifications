@@ -154,3 +154,4 @@ SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "API_KEY")
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
 ROOT_URLCONF = "salalem_notifications.urls"
+IS_NOTIFICATION_SERVICE = True

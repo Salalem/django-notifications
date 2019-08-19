@@ -34,6 +34,7 @@ setup(
     packages=[
         'salalem_notifications',
         'lms_events_handlers',
+        'salalem_notifications_email_extension',
         'salalem_notifications.migrations',
     ],
     package_data={

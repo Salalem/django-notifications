@@ -88,13 +88,15 @@ class Notification(TimeStampedModel):
             print(json.loads(self.categories))
 
             try:
-                send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[self.recipient_email],
-                           template_id=self.template_id,
-                           template_data=template_data,
-                           categories=json.loads(self.categories))
+                result = send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[self.recipient_email],
+                                    template_id=self.template_id,
+                                    template_data=template_data,
+                                    categories=[json.loads(self.categories)])
                 self.status = "delivered"
             except Exception as error:
+                print()
                 self.status = "error"
+                print(error)
                 self.error = error
             self.save()
         else:

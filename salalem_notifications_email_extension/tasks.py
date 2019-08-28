@@ -55,4 +55,4 @@ def send_email(provider, from_email="Salalem <training-center@salalem.com>",
                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
     # Add categories
-    mail.send(fail_silently=False)
+    return mail.send(fail_silently=False)

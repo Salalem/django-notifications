@@ -20,7 +20,7 @@ send_notification.short_description = "Send approved notifications"
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ("recipient_email", "subject", "status")
+    list_display = ("recipient_email", "subject", "status", "created", "modified")
     list_filter = ("recipient_email", "subject", "status", "created", "modified")
     actions = [approve_notification, send_notification]
 

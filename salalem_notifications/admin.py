@@ -15,13 +15,13 @@ def send_notification(modeladmin, request, queryset):
         notification.send()
 
 
-approve_notification.short_description = "Approve and send notifications"
-send_notification.short_description = "Send notifications"
+approve_notification.short_description = "Approve notifications (Send after)"
+send_notification.short_description = "Send approved notifications"
 
 
 class NotificationAdmin(admin.ModelAdmin):
-    list_display = ("status", )
-    list_filter = ("status", "created", "modified")
+    list_display = ("recipient_email", "subject", "status")
+    list_filter = ("recipient_email", "subject", "status", "created", "modified")
     actions = [approve_notification, send_notification]
 
 

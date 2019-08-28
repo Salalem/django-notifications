@@ -94,10 +94,10 @@ class Notification(TimeStampedModel):
                                     template_data=template_data,
                                     categories=[json.loads(self.categories)])
                 self.status = "delivered"
+                if self.error:
+                    self.error = None
             except Exception as error:
-                print()
                 self.status = "error"
-                print(error)
                 self.error = error
             self.save()
         else:

@@ -26,7 +26,10 @@ SECRET_KEY = 'qv=7zpi@(*^0c@=vch43sg=aac5%4nwha4rd=n)9%wr17%7wj+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "notifications.api.salalem.com"
+]
 
 
 # Application definition

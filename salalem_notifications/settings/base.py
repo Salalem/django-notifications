@@ -158,3 +158,5 @@ SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
 ROOT_URLCONF = "salalem_notifications.urls"
 IS_NOTIFICATION_SERVICE = True
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')

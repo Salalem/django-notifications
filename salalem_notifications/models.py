@@ -88,6 +88,7 @@ class Notification(TimeStampedModel):
             print(json.loads(self.categories))
 
             try:
+                print(json.loads(self.categories))
                 result = send_email(AvailableEmailServiceProviders.sendgrid, to_emails=[self.recipient_email],
                                     template_id=self.template_id,
                                     template_data=template_data,

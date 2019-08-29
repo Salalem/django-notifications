@@ -57,7 +57,7 @@ class Notification(TimeStampedModel):
     full_data = models.TextField()
     template_id = models.TextField()
     categories = models.TextField()
-    error = models.TextField()
+    error = models.TextField(null=True, blank=True)
     status = models.CharField(
         blank=True,
         null=True,

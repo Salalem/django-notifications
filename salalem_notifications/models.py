@@ -53,7 +53,7 @@ class Notification(TimeStampedModel):
     subject = models.TextField()
     content = models.TextField()
     template_type = models.TextField()
-    extra_data = models.TextField()
+    extra_data = models.TextField(null=True, blank=True, default={})
     full_data = models.TextField()
     template_id = models.TextField()
     categories = models.TextField()

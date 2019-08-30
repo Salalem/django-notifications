@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'lms_events_handlers',
     'salalem_notifications',
+    'advanced_filters',
 ]
 
 MIDDLEWARE = [

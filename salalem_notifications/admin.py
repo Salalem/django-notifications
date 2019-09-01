@@ -22,8 +22,8 @@ send_notification.short_description = "Send approved notifications"
 
 class NotificationAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
     list_per_page = 250
-    list_display = ("recipient_email", "subject", "status", "created", "modified")
-    list_filter = ("recipient_email", "subject", "status", "created", "modified")
+    list_display = ("status", "subject", "recipient_email", "created", "modified")
+    list_filter = ("status", "subject", "recipient_email", "created", "modified")
     actions = [approve_notification, send_notification]
 
     advanced_filter_fields = (

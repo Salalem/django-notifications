@@ -27,13 +27,12 @@ def send_email(provider, from_email="Salalem <training-center@salalem.com>",
         to=to_emails,
         headers={"Reply-To": reply_to_email_header},
     )
-
+    mail.content_subtype = "html"
     if provider == AvailableEmailServiceProviders.sendgrid:
         if "template_id" not in kwargs:
             raise Exception("A template_id arg should be specified with provider: " + provider)
 
         mail.template_id = kwargs.get("template_id")
-
         if "template_data" not in kwargs:
             raise Exception("A template_data arg should be specified with provider: " + provider)
 

@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         certificate_notification_data = EmailNotificationData()
-        certificate_notification_data.to = "SAl-bahri@hbtf.com.jo"
+        certificate_notification_data.to = "firas@salalem.com"
         certificate_notification_data.subject = "Test email"
         certificate_notification_data.header = "Test {0} Email"
         certificate_notification_data.text = "Test email {1}"

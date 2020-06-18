@@ -1,6 +1,6 @@
 from .base import *
 
-# Database environment variables
+# Databases environment variables
 DB_NAME = os.environ.get("DB_NAME", "notifications")
 DB_USER = os.environ.get("DB_USER", "root")
 DB_PASSWORD = os.environ.get("DB_PASSWORD", "QWEqwe!1")

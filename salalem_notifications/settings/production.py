@@ -10,6 +10,7 @@ DB_PORT = os.environ.get("DB_PORT", "3306")
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
+        "CONN_MAX_AGE": 3600,
         "NAME": DB_NAME,
         "USER": DB_USER,
         "PASSWORD": DB_PASSWORD,

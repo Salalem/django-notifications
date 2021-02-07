@@ -37,8 +37,8 @@ def send_email(provider, from_email="Salalem <training-center@salalem.com>",
             raise Exception("A template_data arg should be specified with provider: " + provider)
         dynamic_data =  kwargs.get("template_data")
         try:
-            if dynamic_data["c2a_link"] == "salalem.com":
-                dynamic_data["c2a_link"] = "demo.salalem.com"
+            if dynamic_data["c2a_link"].startswith("https://salalem.com"):
+	            dynamic_data["c2a_link"] = dynamic_data["c2a_link"].replace("https://salalem.com", "https://demo.salalem.com")
         except:
             pass
                 

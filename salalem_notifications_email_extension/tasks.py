@@ -35,7 +35,13 @@ def send_email(provider, from_email="Salalem <training-center@salalem.com>",
         mail.template_id = kwargs.get("template_id")
         if "template_data" not in kwargs:
             raise Exception("A template_data arg should be specified with provider: " + provider)
-
+        dynamic_data =  kwargs.get("template_data")
+        try:
+            if dynamic_data["c2a"] == "salalem.com":
+                dynamic_data["c2a"] = "demo.salalem.com"
+        except:
+            pass
+                
         mail.dynamic_template_data = kwargs.get("template_data")
 
         if "categories" not in kwargs:

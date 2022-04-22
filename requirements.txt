@@ -1,5 +1,5 @@
 amqp==2.4.1
-Django==2.2.10
+Django==2.2.28
 git+https://github.com/salalem/django-microservice-propaganda.git
 django-model-utils==3.1.2
 django-sendgrid-v5==0.8.0

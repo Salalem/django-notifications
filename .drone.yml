@@ -1,0 +1,45 @@
+kind: pipeline
+type: kubernetes
+name: Build
+
+steps:
+- name: Push  
+  image: plugins/docker
+  environment:
+    SSH_PRIVATE:
+      from_secret: SSH_PRIVATE
+  when:
+    branch:
+    - master
+    event:
+    - push
+  settings:
+    repo: "salalemdockerhub/notifications-api"
+    build_args_from_env:
+      - SSH_PRIVATE
+    tags:
+    - stg.${DRONE_COMMIT}
+    - latest
+    username: 
+      from_secret: DOCKER_USER_NAME
+    password:
+      from_secret: DOCKER_PASSWORD
+
+- name: Tag
+  image: plugins/docker
+  environment:
+    SSH_PRIVATE:
+      from_secret: SSH_PRIVATE
+  when:
+    event:
+    - tag
+  settings:
+    repo: "salalemdockerhub/notifications-api"
+    build_args_from_env:
+      - SSH_PRIVATE
+    tags:
+    - ${DRONE_TAG}
+    username:
+      from_secret: DOCKER_USER_NAME
+    password:
+      from_secret: DOCKER_PASSWORD

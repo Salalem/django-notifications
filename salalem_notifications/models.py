@@ -5,7 +5,7 @@ import json
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.utils.translation import ugettext_noop
+from django.utils.translation import gettext_noop
 from model_utils.models import TimeStampedModel
 
 
@@ -40,11 +40,11 @@ class EmailNotificationData(object):
 EXTRA_DATA = True
 
 NOTIFICATION_STATUSES = (
-    ("in_review", ugettext_noop("In Review")),
-    ("approved", ugettext_noop("Approved")),
-    ("sent", ugettext_noop("Sent")),
-    ("delivered", ugettext_noop("Delivered")),
-    ("error", ugettext_noop("Error")),
+    ("in_review", gettext_noop("In Review")),
+    ("approved", gettext_noop("Approved")),
+    ("sent", gettext_noop("Sent")),
+    ("delivered", gettext_noop("Delivered")),
+    ("error", gettext_noop("Error")),
 )
 
 
